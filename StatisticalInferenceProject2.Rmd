@@ -1,0 +1,70 @@
+---
+title: "StatisticalInferenceProject2"
+author: "Alex Mihailov"
+date: "2024-09-04"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Overview
+The project aim is to analyze the ToothGrowth data in the R datasets package.
+
+
+1. Load the ToothGrowth data and perform some basic exploratory data analyses
+```{r}
+library(ggplot2)
+library(tinytex)
+library(datasets)
+
+data(ToothGrowth)
+str(ToothGrowth)
+head(ToothGrowth, 5)
+tail(ToothGrowth, 5)
+
+summary(ToothGrowth)
+```
+
+
+2.Basic summary of the data
+```{r}
+Supplement_mean = split(ToothGrowth$len, ToothGrowth$supp)
+sapply(Supplement_mean, mean)
+```
+
+Graph
+```{r}
+ggplot(aes(x=supp, y=len), data=ToothGrowth) + geom_boxplot(aes(fill=supp)) + 
+    xlab("Supplement Type") +
+    ylab("Tooth length") 
+```
+
+3. Using confidence intervals to compare growth of tooth by supplement dose
+```{r}
+unique(ToothGrowth$dose)
+```
+
+There are 3 groups: 0.5, 1, and 2
+Graph shows relationship between Tooth length to Dose
+```{r}
+ggplot(aes(x = factor(dose), y = len), data = ToothGrowth) + 
+    geom_boxplot(aes(fill = factor(dose))) +
+    labs(title="Tooth Lenght relationship to Dosage")
+
+```
+T-test for dose 0.5 mg:
+```{r}
+t.test(len ~ supp, ToothGrowth[ToothGrowth$dose == .5, ])
+```
+T-test for dose 1 mg:
+```{r}
+t.test(len ~ supp, ToothGrowth[ToothGrowth$dose == 1, ])
+```
+T-test for dose 2 mg:
+```{r}
+t.test(len ~ supp, ToothGrowth[ToothGrowth$dose == 2, ])
+```
+Conclusion:
+
+For all three dosages, the p-value of this test is is less than 0.5, a evidence that we can reject the null hypothesis. We can infer that supplement type has no effect on tooth growth, and increasing the dose level leads to increased tooth growth.
+
